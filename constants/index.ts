@@ -156,11 +156,13 @@ interface Validity {
 export const prepareInstructions = ({
                                         companyName,
                                         invoicePurpose,
-                                        AIResponseFormat
+                                        invoiceNumber,              // NEW
+                                        responseFormat = AIResponseFormat,
                                     }: {
     companyName: string;
     invoicePurpose: string;
-    AIResponseFormat: string;
+    invoiceNumber?: string;     // NEW
+    responseFormat?: string;
 }) => `
 You are a financial document analysis AI trained to verify and evaluate invoices.
 
@@ -168,6 +170,7 @@ Please carefully analyze the attached invoice and assess it across various finan
 
 The company name is: ${companyName}
 The invoice is submitted for the following purpose: ${invoicePurpose}
+${invoiceNumber ? `Invoice number: ${invoiceNumber}` : ""}
 
 You must:
 - Validate calculation accuracy (subtotal, VAT, total).
@@ -177,7 +180,7 @@ You must:
 - Ensure compliance with UAE VAT or relevant tax law.
 
 Provide detailed feedback using the following format:
-${AIResponseFormat}
+${responseFormat}
 
 Return the analysis as a pure JSON object — no extra text, headers, comments, or backticks.
-`;
+`.trim();
